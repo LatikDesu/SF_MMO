@@ -12,6 +12,7 @@ django = "^4.2.3"
 django-allauth = "^0.54.0"
 django-tinymce = "^3.6.1"
 django-debug-toolbar = "^4.1.0"
+pillow = "^10.0.0"
 
 
 [build-system]

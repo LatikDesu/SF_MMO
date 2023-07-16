@@ -1,0 +1,61 @@
+{% load news_tags %}
+
+<div class="m-auto">
+		<div class="pagination mt-5 pt-4">
+				<ul class="list-inline">
+						<li class="list-inline-item {% if not page_obj.has_previous %} disabled {% endif %}">
+								<a href="{% if page_obj.has_previous %} {% url 'news:paginator' page_obj.previous_page_number %} {% else %} # {% endif %}"
+								   tabindex="-1" aria-disabled="true"><i
+												class="ti-arrow-left"></i></a></li>
+
+						{#Первая страница#}
+						{% if page_obj.number != 1 %}
+								<li class="list-inline-item">
+										<a href="{% url 'news:paginator' 1 %}?{% url_replace %}"
+										   tabindex="-1" aria-disabled="true">1</a></li>
+						{% endif %}
+
+						{#Предыдущая страница#}
+						{% if page_obj.number|add:'-2' > 1 %}
+								<li class="list-inline-item">. . .</li>
+						{% endif %}
+						{% if page_obj.number|add:'-1' > 1 %}
+								<li class="list-inline-item"><a
+												href="{% url 'news:paginator' page_obj.previous_page_number %}?{% url_replace %}">
+										{{ page_obj.previous_page_number }}
+								</a></li>
+						{% endif %}
+
+						{#Текущая страница#}
+						<li class="list-inline-item"><a class="active"
+						                                href="{% url 'news:paginator' page_obj.number %}?{% url_replace %}">
+								{{ page_obj.number }}
+						</a></li>
+
+						{#Следующая страница#}
+						{% if page_obj.has_next and page_obj.next_page_number != page_obj.paginator.num_pages %}
+								<li class="list-inline-item"><a
+												href="{% url 'news:paginator' page_obj.next_page_number %}?{% url_replace %}">
+										{{ page_obj.next_page_number }}
+								</a></li>
+						{% endif %}
+
+						{#Последняя страница#}
+						{% if page_obj.number|add:'2' < page_obj.paginator.num_pages %}
+								<li class="list-inline-item">. . .</li>
+						{% endif %}
+						{% if page_obj.number|add:'1' <= page_obj.paginator.num_pages %}
+								<li class="list-inline-item">
+										<a href="{% url 'news:paginator' page_obj.paginator.num_pages %}?{% url_replace %}"
+										   tabindex="-1" aria-disabled="true">{{ page_obj.paginator.num_pages }}</a></li>
+						{% endif %}
+
+						<li class="list-inline-item {% if not page_obj.has_next %} disabled {% endif %}">
+								<a href="{% if page_obj.has_next %} {% url 'news:paginator' page_obj.next_page_number %}?{% url_replace %} {% else %} # {% endif %}">
+										<i class="ti-arrow-right"></i>
+								</a>
+						</li>
+				</ul>
+		</div>
+</div>
+
