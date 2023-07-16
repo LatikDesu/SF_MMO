@@ -27,6 +27,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+INTERNAL_IPS = [
+    '127.0.0.1',
+    'localhost',
+]
+
+DOMAIN_NAME = 'http://127.0.0.1:8000'
+
 
 # Application definition
 
@@ -37,6 +44,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
+
+    'tinymce',
+    'debug_toolbar',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.vk',
+
+    'posts.apps.PostsConfig',
+    'accounts.apps.AccountsConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -47,6 +68,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'SF_MMORPG.urls'
@@ -116,9 +139,81 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+if DEBUG:
+    STATICFILES_DIRS = (
+        BASE_DIR / 'static',
+    )
+else:
+    STATIC_ROOT = BASE_DIR / 'static'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Users
+# AUTH_USER_MODEL = 'accounts.Author'
+# LOGIN_URL = '/users/login/'
+# LOGIN_REDIRECT_URL = '/'
+# LOGOUT_REDIRECT_URL = '/'
+
+# OAuth
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+DEFAULT_FROM_EMAIL = 'testo-python@yandex.ru'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'OAUTH_PKCE_ENABLED': True,
+    },
+}
+
+# Sending emails
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'testo-python'
+EMAIL_HOST_PASSWORD = 'nyqoawuztcptafxi'
+EMAIL_USE_SSL = True
+
+# TinyMCE Editor
+TINYMCE_JS_URL = 'https://cdn.tiny.cloud/1/j7gdftvdy97nmowd90h71xnnkbn3ibuz0e4qxgay29qwapcv/tinymce/6/tinymce.min.js'
+
+TINYMCE_DEFAULT_CONFIG = {
+    "height": "720px",
+    "width": "960px",
+    "menubar": "file edit view insert format tools table help",
+    "plugins": "advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code "
+               "fullscreen insertdatetime media table paste code help wordcount spellchecker",
+    "toolbar": "undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft "
+               "aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor "
+               "backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | "
+               "fullscreen  preview save print | insertfile image media pageembed template link anchor codesample | "
+               "a11ycheck ltr rtl | showcomments addcomment code",
+    "custom_undo_redo_levels": 10,
+}
+
+TINYMCE_SPELLCHECKER = True
+
+SITE_ID = 1
+
