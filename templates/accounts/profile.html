@@ -52,7 +52,7 @@
 
 										<div class="form-row mb-2 mt-3">
 												<div class="col-lg-12">
-														<label class="small mb-1" for="{{ form.status.id_for_label }}">
+														<label class="small mb-1" for="{{ form.role.id_for_label }}">
 																Ваша роль?
 														</label>
 														{{ form.role }}
@@ -76,15 +76,44 @@
 
 						<div class="col-lg-5">
 								<div class="sidebar-widget category mb-5">
-										<h4 class="mt-3 mb-3 text-center widget-title">Мои статьи:</h4>
+										<h4 class="mt-3 mb-3 text-center widget-title">Мои объявления:</h4>
 										<ul class="list-unstyled">
 												{% for post in posts|slice:":10" %}
 														<li class="align-items-center d-flex justify-content-between">
-																<a href="{% url 'news:news_detail' post.id %}">{{ post.title }}</a>
+																<a href="{% url 'posts:post_detail' post.id %}">{{ post.title }}</a>
 																<span>{{ post.comment_set.count }}</span>
 														</li>
 												{% endfor %}
 										</ul>
+
+										<h4 class="mt-3 mb-3 text-center widget-title">Отклики:</h4>
+										<ul class="list-unstyled">
+												{% for post in posts|slice:":10" %}
+														{% for comment in post.get_comments %}
+
+																<li class="align-items-center justify-content-between">
+																		<a href="{% url 'posts:post_detail' post.id %}">{{ post.title }}</a>
+																		<div style="display: flex; justify-content: space-between;">
+																				<span style="width: auto;">{{ comment.user }}</span>
+																				{{ comment.text }}
+																				<div>
+																						{% if not comment.rev_status %}
+																								<a class="btn btn-info"
+																								   href="{% url 'posts:accept_comment' comment.id %}"
+																								   role="button">Принять</a>
+																						{% else %}
+																								<a class="btn btn-success"
+																								   href="{% url 'posts:accept_comment' comment.id %}"
+																								   role="button">Принято</a>
+																								</div>
+																								</div>
+
+																								</li>
+																						{% endif %}
+														{% endfor %}
+												{% endfor %}
+										</ul>
+
 								</div>
 						</div>
 				</div>

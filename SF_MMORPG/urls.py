@@ -19,9 +19,14 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from posts.views import PostView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('accounts.urls', namespace='accounts')),
+    path('posts/', include('posts.urls'), name='posts'),
+
+    path('', PostView.as_view(), name='index'),
 
     path('tinymce/', include('tinymce.urls')),
     path('accounts/', include('allauth.urls')),

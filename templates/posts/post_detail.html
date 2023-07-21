@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load cache %}
+{% load static post_tags %}
+
+{% block title %} {{ title }} {% endblock title %}
+
+{% block content %}
+		<section class="single-block-wrapper section-padding">
+				<div class="container">
+						<div class="row">
+								<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex justify-content-end">
+										{% if user.id == post.user.id %}
+												<button class="btn btn-primary" value="">
+														<a href="{% url 'posts:post_update' post.id %}">Редактировать</a>
+												</button>
+												<form method="POST" action="{% url 'posts:post_delete' post.id %}">
+														{% csrf_token %}
+														<input type="submit" class="btn btn-primary mx-3" value="Удалить">
+												</form>
+
+										{% endif %}
+								</div>
+								<div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+										<div class="single-post">
+												<div class="post-header mb-5 text-center">
+														<div class="meta-cat">
+																<a class="post-category font-extra text-color text-uppercase font-sm letter-spacing-1"
+																   href="#">
+																		{% for category in post.postcategory_set.all %}
+																				{{ category.category.get_type_display }}
+																		{% endfor %}
+																</a>
+														</div>
+														<h2 class="post-title mt-2">
+																{{ post.title }}
+														</h2>
+														<div class="post-meta">
+																<span class="text-uppercase font-sm letter-spacing-1 mr-3">{{ post.user }}</span>
+																<span class="text-uppercase font-sm letter-spacing-1">{{ post.time|date:"M d, Y" }}</span>
+														</div>
+														<div class="post-featured-image mt-5">
+																<img src="{{ post.poster.url }}" class="img-fluid w-50" alt="featured-image">
+														</div>
+												</div>
+												<div class="post-body">
+														<div class="entry-content">
+																{{ post.description|safe }}
+														</div>
+
+														<div
+																		class="tags-share-box center-box d-flex text-center justify-content-between border-top border-bottom py-3">
+
+                                <span class="single-comment-o"><i
+				                                class="fa fa-comment-o"></i> {{ post.comment_set.all|length }} откликов </span>
+
+														</div>
+												</div>
+										</div>
+
+
+										<div class="post-author d-flex my-5">
+												<div class="author-img">
+														<img alt="" src="{{ author.image.url }}" class="avatar avatar-100 photo" width="100"
+														     height="100">
+												</div>
+
+												<div class="author-content pl-4">
+														<h4 class="mb-3"><a href="#" title="" rel="author"
+														                    class="text-capitalize">{{ user.username }}</a>
+														</h4>
+														<p>{{ user.role }}</p>
+														<p>{{ user.about }}</p>
+
+														<a target="_blank" class="author-social" href="#">
+																<i class="fa-brands fa-square-gitlab fa-l mr-2"></i></a>
+														<a target="_blank" class="author-social" href="#">
+																<i class="fa-brands fa-vk fa-m mr-2"></i></a>
+														<a target="_blank" class="author-social" href="#">
+																<i class="fa-brands fa-youtube fa-m mr-2"></i></a>
+														<a target="_blank" class="author-social" href="#">
+																<i class="fa-brands fa-telegram fa-m mr-2"></i></a>
+														<a target="_blank" class="author-social" href="#">
+																<i class="fa-brands fa-square-hacker-news fa-m mr-2"></i></a>
+												</div>
+										</div>
+
+										{% get_last_posts count=3 %}
+
+										{% include 'posts/comments.html' %}
+								</div>
+								{% cache 10 sidebar %}
+										{% include 'include/sidebar.html' %}
+								{% endcache %}
+						</div>
+				</div>
+		</section>
+
+{% endblock content %}
+

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load post_tags %}
+
+{% block title %} {{ title }} {% endblock title %}
+
+{% block content %}
+
+		<section class="section-padding">
+
+				<div class="container">
+						<div class="row">
+								<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+										<div class="row">
+												{% for post in object_list %}
+														<div class="col-lg-4 col-md-6 col-sm-6">
+																<article class="post-grid mb-5 ">
+																		<a class="post-thumb mb-4 d-block" href="{% url 'posts:post_detail' post.id %}">
+																				<img src="{{ post.poster.url }}" alt="IMAGE" class="news-image">
+																		</a>
+
+																		<div class="post-content-grid">
+																				<div class="label-date">
+																						<span class="day">{{ post.time|date:" d " }}</span>
+																						<span class="month text-uppercase">{{ post.time|date:" M " }}</span>
+																				</div>
+																				<span class="cat-name text-color font-extra font-sm text-uppercase letter-spacing">
+                                {% for category in post.postcategory_set.all %}
+		                                {% if category.post_id == post.id %}
+				                                {{ category.category.get_type_display }}
+		                                {% endif %}
+                                {% endfor %}
+                            </span>
+																				<h3 class="post-title mt-1"><a
+																								href=" {% url 'posts:post_detail' post.id %} ">{{ post.title }}</a>
+																				</h3>
+																				<p>{{ post.description|truncatewords:24|striptags }}</p>
+																				<div>
+																							<span class="single-comment-o"><i
+																											class="fa fa-comment-o"></i> {{ post.comment_set.all|length }} откликов </span>
+
+																				</div>
+																		</div>
+
+																</article>
+														</div>
+												{% endfor %}
+										</div>
+								</div>
+
+								{% if is_paginated %}
+										{% include 'include/pagination.html' %}
+								{% endif %}
+
+
+						</div>
+				</div>
+		</section>
+
+{% endblock content %}
+

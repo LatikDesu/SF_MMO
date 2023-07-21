@@ -10,6 +10,7 @@ from django.views.generic import CreateView, TemplateView, UpdateView
 
 from accounts.forms import UserLoginForm, UserProfileForm, UserRegistrationForm
 from accounts.models import User, EmailVerification
+from posts.models import Post
 
 
 # from posts.models import Post
@@ -35,7 +36,7 @@ class UserProfileView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(UserProfileView, self).get_context_data()
-        # context['posts'] = Post.objects.filter(author=self.request.user).order_by('-time')
+        context['posts'] = Post.objects.filter(user=self.request.user).order_by('-time')
         return context
 
     def get_success_url(self):

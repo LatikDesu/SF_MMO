@@ -1,11 +1,11 @@
 {% load static %}
-{% load news_tags user_tags %}
+{% load post_tags %}
 
 <header class="header-top bg-dark py-4">
 		<div class="container">
 				<nav class="navbar navbar-expand-lg navigation menu-white">
 						<a class="navbar-brand" href="{% url 'index' %}">
-								<img src="{% static 'images/logo-w.png' %}" alt="" class="img-fluid">
+								<img style="max-height: 50px" src="{% static 'images/mmorpg_logo.png' %}" alt="" class="img-fluid">
 						</a>
 
 						<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse"
@@ -16,22 +16,20 @@
 						<div class="collapse navbar-collapse" id="navbar-collapse">
 								<ul class="menu navbar-nav ml-auto">
 
-										<li class="nav-item"><a href="{% url 'index' %}" class="nav-link">Статьи</a></li>
+										<li class="nav-item"><a href="{% url 'index' %}" class="nav-link">Объявления</a></li>
 										<li class="nav-item dropdown">
 												<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button"
 												   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-														Категории
+														Классы
 												</a>
 												<div class="dropdown-menu" aria-labelledby="navbarDropdown2">
 														{% get_categories as categories %}
 														{% for category in categories %}
 																<a class="dropdown-item"
-																   href="{% url 'news:news_category_list' category_id=category.id %}">{{ category.name }}</a>
+																   href="{% url 'posts:post_category_list' category_id=category.id %}">{{ category.get_type_display }}</a>
 														{% endfor %}
 												</div>
 										</li>
-										<li class="nav-item"><a href="/about/" class="nav-link">Об Авторе</a></li>
-										<li class="nav-item"><a href="/contacts/" class="nav-link">Контакты</a></li>
 										{% if user.is_authenticated %}
 												<li class="nav-item dropdown">
 														<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -42,21 +40,14 @@
 																<li>
 																		<a class="dropdown-item" href="{% url 'accounts:profile' user.id %}">Профиль</a>
 																</li>
-																{% if user.groups.all|filter:'authors' %}
-																		<li><a class="dropdown-item" href="{% url 'news:article_create' %}">Создать
-																				статью</a>
+																{% if user.is_verified_email %}
+																		<li><a class="dropdown-item" href="{% url 'posts:post_create' %}">Создать
+																				объявление</a>
 																		</li>
-																		<li><a class="dropdown-item" href="{% url 'news:news_create' %}">Создать новость</a>
+																		<li>
+																				<hr class="dropdown-divider">
 																		</li>
-
-																		<li><a class="dropdown-item" href="#">Мои статьи</a></li>
-																{% else %}
-																		<li><a class="dropdown-item" href="{% url 'users:upgrade' %}">Получить статус
-																				Автора</a></li>
 																{% endif %}
-																<li>
-																		<hr class="dropdown-divider">
-																</li>
 																<li>
 																		<a class="dropdown-item" href="{% url 'users:logout' %}">Выйти</a>
 																</li>
@@ -69,57 +60,8 @@
 												</li>
 										{% endif %}
 								</ul>
-								<div class="text-lg-right search ml-4">
-										<div class="search_toggle"><i class="ti-search text-white"></i></div>
-								</div>
 						</div>
 				</nav>
 		</div>
 </header>
-<!--search overlay start-->
-{#<div class="search-wrap">#}
-{#		<div class="overlay">#}
-{#				<form action="" class="search-form">#}
-{#						<div class="container">#}
-{#								<div class="row">#}
-{#										<div class="col-md-10 col-9">#}
-{#												<input type="text" class="form-control" placeholder="Поиск..."/>#}
-{#										</div>#}
-{#										<div class="col-md-2 col-3 text-right">#}
-{#												<div class="search_toggle toggle-wrap d-inline-block">#}
-{#														<i class="ti-close"></i>#}
-{#												</div>#}
-{#										</div>#}
-{#								</div>#}
-{#						</div>#}
-{#				</form>#}
-{#		</div>#}
-{#</div>#}
-
-{% if filterset %}
-		<div class="search-wrap">
-		<div class="overlay">
-		<form action="{% url 'news:news_list' %}" method="get" class="search-form">
-				<div class="container">
-						<div class="row">
-								<div class="col-md-10 col-9">
-										{{ filterset.form }}
-
-								</div>
-								<div class="col-md-2 col-3 text-right">
-										<div class="search_toggle toggle-wrap d-inline-block">
-												<i class="ti-close"></i>
-										</div>
-										<div>
-												<input class="btn btn-primary" style="font-size: 16px;" hidden type="submit" value="Найти"/>
-										</div>
-								</div>
-						</div>
-				</div>
-		</form>
-{% endif %}
-
-</div>
-</div>
-<!--search overlay end-->
 

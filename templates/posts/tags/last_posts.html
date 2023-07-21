@@ -1,0 +1,21 @@
+<div class="related-posts-block mt-5">
+		<h3 class="news-title mb-4 text-center">
+				Последние объявления
+		</h3>
+		<div class="row">
+				{% for post in last_posts %}
+						<div class="col-lg-4 col-md-4 col-sm-6">
+								<div class="post-block-wrapper mb-4 mb-lg-0">
+										<a href="{% url 'posts:post_detail' post.id %}">
+												<img class="img-fluid" src="{{ post.poster.url }}" alt="post-thumbnail"/>
+										</a>
+										<div class="post-content mt-3">
+												<h5>
+														<a href="{% url 'posts:post_detail' post.id %}">{{ post.title }}</a>
+												</h5>
+										</div>
+								</div>
+						</div>
+				{% endfor %}
+		</div>
+</div>
